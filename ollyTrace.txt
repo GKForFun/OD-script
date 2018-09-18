@@ -1,0 +1,44 @@
+var num
+var base
+mov num,1
+ask "enter base address"
+mov base,$RESULT
+CONTINUE:
+findop eip,#E8????????#
+cmp eip,$RESULT
+je FIND_FUNC
+findop eip,#FF15????????#
+cmp eip,$RESULT
+je FIND_FUNC
+jmp FIND_RET
+FIND_FUNC:
+GN eip
+GMI eip,CODEBASE
+log "---------"
+log num
+log eip
+add num,1
+cmp $RESULT,base
+je STEP_INTO
+log $RESULT_1
+log $RESULT_2
+log $RESULT
+jmp STEP_OUT
+FIND_RET:
+findop eip,#C2????#
+cmp eip,$RESULT
+je RET
+findop eip,#C3#
+cmp eip,$RESULT
+je RET
+jmp STEP_OUT
+RET:
+sub num,1
+jmp STEP_INTO
+STEP_OUT:
+STO
+jmp TEMP
+STEP_INTO:
+STI
+TEMP:
+jmp continue
